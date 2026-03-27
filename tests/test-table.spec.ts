@@ -1,0 +1,22 @@
+import { test, expect } from '@playwright/test';
+
+test.describe('Table test', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('practice-test-table');
+    await page.waitForLoadState('domcontentloaded');
+    //eslint-disable-next-line no-console
+    console.log("Hello");
+  });
+
+  test('select java Advanced only', async ({ page }) => {
+    await page.getByRole('radio', { name: 'Java' }).check();
+    await page.locator('label').filter({ hasText: 'Beginner' }).click();
+    await page.getByRole('checkbox', { name: 'Intermediate' }).uncheck();
+    const advancedLocator = page.getByRole('checkbox', { name: 'Advanced' });
+    await test.info().attach('advanced_only', {
+      body: await page.screenshot({ fullPage: true }),
+      contentType: 'image/png',
+    });
+    await expect(advancedLocator).toBeChecked();
+  });
+});
